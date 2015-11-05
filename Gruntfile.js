@@ -3,6 +3,27 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: {
+        separator: ';'
+      },
+      dist: {
+        src: ['app/config.js', 'app/models/*.js', 'app/collections/*.js', 'lib/*.js','server-config.js', 'server.js'],
+        dest: 'dist/buildserver.js'
+      },
+      assets: {
+        src: ['public/client/*.js'],
+        dest: 'public/dist/buildassets.js'
+      },
+      lib: {
+        src: ['public/lib/underscore.js', 'public/lib/jquery.js', 'public/lib/backbone.js', 'public/lib/handlebars.js'],
+        dest: 'public/dist/buildlib.js'
+      }
+    },
+
+    clean: {
+      dist: {
+        src: ["dist"]
+      }
     },
 
     mochaTest: {
@@ -21,12 +42,16 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      dist: {
+           files: {
+             'dist/buildserver.min.js': ['dist/buildserver.js'],
+             'public/dist/buildassets.min.js': ['public/dist/buildassets.js']
+           }
+         }
     },
 
     jshint: {
-      files: [
-        // Add filespec list here
-      ],
+      files: ['Gruntfile.js', 'app/**/*.js', 'public/client/*.js', 'server-config.js', 'server.js'],
       options: {
         force: 'true',
         jshintrc: '.jshintrc',
@@ -38,7 +63,11 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
-        // Add filespec list here
+      target: {
+        files:  {
+         'public/dist/buildstyle.css': ['public/style.css'] 
+        }
+      }
     },
 
     watch: {
@@ -60,11 +89,15 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        command: [
+          'azure site scale free shortlyBP',
+          'git push azure master'].join('&&');
       }
     },
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -94,12 +127,14 @@ module.exports = function(grunt) {
     'mochaTest'
   ]);
 
-  grunt.registerTask('build', [
-  ]);
+  grunt.registerTask('build', ['jshint', 'test', 'concat', 'uglify', 'cssmin']);
+
+  grunt.registerTask('clean', ['clean']);
 
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      grunt.run(['test', 'build', 'shell:prodServer']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
@@ -107,6 +142,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
       // add your production server task here
+      grunt.task.run(['clean', 'upload']);
   ]);
 
 

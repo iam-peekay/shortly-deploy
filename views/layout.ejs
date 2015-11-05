@@ -3,11 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <title>Shortly</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="/lib/jquery.js"></script>
-    <script src="/lib/underscore.js"></script>
-    <script src="/lib/backbone.js"></script>
-    <script src="/lib/handlebars.js"></script>
+    <% if (process.NODE_ENV === 'production') { %>
+
+      <link rel="stylesheet" type="text/css" href="public/dist/buildstyle.css">
+      <script src="public/dist/buildlib.min.js"></script>
+
+    <% } else { %>
+
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <script src="/lib/jquery.js"></script>
+      <script src="/lib/underscore.js"></script>
+      <script src="/lib/backbone.js"></script>
+      <script src="/lib/handlebars.js"></script>
+    
+    <% } %>
 
   </head>
 
