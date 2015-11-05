@@ -30,7 +30,7 @@ db.knex.schema.hasTable('urls').then(function(exists) {
 });
 
 db.knex.schema.hasTable('users').then(function(exists) {
-  if (!exists) {
+  if (!exists) { d
     db.knex.schema.createTable('users', function (user) {
       user.increments('id').primary();
       user.string('username', 100).unique();
