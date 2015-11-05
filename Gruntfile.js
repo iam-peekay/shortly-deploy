@@ -44,7 +44,8 @@ module.exports = function(grunt) {
       dist: {
            files: {
              'dist/buildserver.min.js': ['dist/buildserver.js'],
-             'public/dist/buildassets.min.js': ['public/dist/buildassets.js']
+             'public/dist/buildassets.min.js': ['public/dist/buildassets.js'],
+             'public/dist/buildlib.min.js': ['public/dist/buildlib.js']
            }
          }
     },
