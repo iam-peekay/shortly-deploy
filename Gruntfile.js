@@ -2,6 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    
     concat: {
       options: {
         separator: ';'
@@ -20,11 +21,9 @@ module.exports = function(grunt) {
       }
     },
 
-    clean: {
-      dist: {
-        src: ["dist"]
-      }
-    },
+    // clean: {
+    //   src: ['dist', 'public/dist']
+    // },
 
     mochaTest: {
       test: {
@@ -91,7 +90,9 @@ module.exports = function(grunt) {
       prodServer: {
         command: [
           'azure site scale free shortlyBP',
-          'git push azure master'].join('&&');
+          'git add .',
+          'git commit -m "Committing build"',
+          'git push azure master'].join('&&')
       }
     },
   });
@@ -129,12 +130,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['jshint', 'test', 'concat', 'uglify', 'cssmin']);
 
-  grunt.registerTask('clean', ['clean']);
-
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
-      grunt.run(['test', 'build', 'shell:prodServer']);
+      grunt.task.run(['test', 'build', 'shell:prodServer']);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
@@ -142,8 +141,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
       // add your production server task here
-      grunt.task.run(['clean', 'upload']);
+     'upload'
   ]);
-
 
 };

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Shortly</title>
-    <% if (process.NODE_ENV === 'production') { %>
+    <% if (process.env.NODE_ENV === 'production') { %>
 
       <link rel="stylesheet" type="text/css" href="public/dist/buildstyle.css">
       <script src="public/dist/buildlib.min.js"></script>
